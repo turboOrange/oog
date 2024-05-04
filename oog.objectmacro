@@ -1,0 +1,149 @@
+Macro main_class
+
+  Param
+    var: variable;
+    stm: eventif;
+
+{Body}
+package oog;
+import java.io.*;
+import java.util.*;
+
+public class Main {
+    String currentEvent = "";
+    int currentExit = 0;
+    Map<String, List<Integer>> variables = new HashMap<>();
+    Map<String, Map<String, String>> events;
+
+    public int executeChoiceEvent(Map<String, String> event){
+        System.console().flush();
+        System.out.println(event.get("backGround"));
+        System.out.println(event.get("character"));
+        System.out.println(event.get("test"));
+        for (Map.Entry<String, String> entry : event.entrySet()) {
+            if(entry.getKey().contains("choice__")){
+                System.out.println(entry.getKey() + " : " + entry.getValue());
+            }
+        }
+        System.out.println("Your choice: ");
+        return Integer.parseInt(System.console().readLine());
+    }
+
+    public int executeEndEvent(Map<String, String> event){
+        System.console().flush();
+        System.out.println(event.get("background"));
+        System.out.println(event.get("character"));
+        System.out.println(event.get("text"));
+        return -1;
+    }
+
+    public int executeEvent(){
+        Map<String, String> event = events.get(currentEvent);
+        if(Objects.equals(event.get("type"), "choice")){
+            return executeChoiceEvent(event);
+        }else if(Objects.equals(event.get("type"), "end")){
+            return executeEndEvent(event);
+        }else{
+            System.out.println("event type not implemented");
+        }
+        return -2;
+    }
+    public static void main(String[] args) {
+        Main oog = new Main();
+        oog.run();
+    }
+
+    public void run() {
+    {var}
+    try{
+    FileInputStream fis = new FileInputStream("events.ser");
+    ObjectInputStream ois = new ObjectInputStream(fis);
+    events = (Map<String, Map<String, String>>) ois.readObject();
+    ois.close();
+    }catch(FileNotFoundException e){
+        System.out.println(e);
+    }catch(IOException e){
+        System.out.println(e);
+    }catch(ClassNotFoundException e){
+        System.out.println(e);
+    }
+    for(String key: events.keySet()){
+        if(key.contains("first__")){
+           currentEvent = key;
+        }
+    }
+
+    while(true){
+        currentExit = executeEvent();
+    if(false){}
+    {stm}
+    }
+    }
+}
+{End}
+
+Macro variable
+
+    Param
+        min: String;
+        max: String;
+        def: String;
+        visible: String;
+        name: String;
+{Body}
+variables.put("{name}", new ArrayList<>());
+variables.get("{name}").addAll(Arrays.asList({min}, {def}, {max}, {visible}));
+{End}
+
+Macro eventif
+    Param
+        stm: ifstatement;
+        currentevent: String;
+
+{Body}
+else if(Objects.equals("{currentevent}", this.currentEvent)){
+    {stm}
+    if(currentExit == -1)
+        return;
+}
+{End}
+
+Macro ifstatement
+
+    Param
+        exit: String;
+        nextevent: String;
+        modifiers: modifier;
+
+{Body}
+if(currentExit == {exit}){
+    this.currentEvent = "{nextevent}";
+    {modifiers}
+}
+{End}
+
+Macro modifier
+
+    Param
+        variable: String;
+        value: String;
+        operator: String;
+
+{Body}
+if(this.variables.get("{variable}").get(1) {operator} {value} < this.variables.get("{variable}").get(0)){
+List<Integer> varInfo = this.variables.get("{variable}");
+varInfo.set(1, varInfo.get(0));
+this.variables.replace("{variable}",  varInfo);
+}
+else if(this.variables.get("{variable}").get(1) {operator} {value} > this.variables.get("{variable}").get(2)){
+List<Integer> varInfo = this.variables.get("{variable}");
+varInfo.set(1, varInfo.get(2));
+this.variables.replace("{variable}",  varInfo);
+}
+else{
+List<Integer> varInfo = this.variables.get("{variable}");
+varInfo.set(1, varInfo.get(1) {operator} {value} );
+this.variables.replace("{variable}",  varInfo);
+}
+{End}
+

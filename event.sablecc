@@ -1,0 +1,40 @@
+Package event.syntax;
+
+Helpers
+  digit = ['0'..'9'];
+  letter = ['a'..'z'];
+  string_char = [[32..126]-'"'];
+  not_eol = [[0..0xFFFF]-[13+10]];
+
+Tokens
+  l_brace = '{';
+  r_brace = '}';
+  dot_dot = ':';
+
+  first = 'first';
+  exit = 'exit';
+  file = 'file';
+
+  num = digit+;
+  ident = letter (letter | digit)*;
+
+  comment = '#' not_eol* (13 | 10 | 13 10)?;
+  blank = (' ' | 9 | 13 | 10)+;
+  string = '"' string_char* '"';
+
+IgnoredTokens
+  blank, comment;
+
+Productions
+
+  program = [events]:event*;
+
+  event = {first} first [type]:ident [name]:ident dot_dot agregation |
+          {normal} [type]:ident [name]:ident dot_dot agregation;
+
+  agregation = l_brace [assosiations]:assosiation* r_brace;
+
+  assosiation = {direct} ident dot_dot string |
+                {indirect} ident dot_dot file string |
+                {choice} exit num dot_dot string;
+
