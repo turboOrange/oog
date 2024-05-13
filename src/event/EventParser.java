@@ -98,9 +98,10 @@ public class EventParser extends DepthFirstAdapter {
         for(Object assosiationObject : this.currentResult.getMapValue().keySet()){
             eventContent.put((String) assosiationObject, this.currentResult.getMapValue().get(assosiationObject));
         }
+        eventContent.put("IS_FIRST", "TRUE");
         this.currentResult = null;
         eventContent.put("type", node.getType().getText());
-        this.events.put("first__" + node.getName().getText(), eventContent);
+        this.events.put(node.getName().getText(), eventContent);
     }
 
     @Override
