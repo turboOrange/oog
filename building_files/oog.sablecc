@@ -1,0 +1,51 @@
+Package oog.syntax;
+
+Helpers
+  digit = ['0'..'9'];
+  letter = ['a'..'z'];
+  not_eol = [[0..0xFFFF]-[13+10]];
+
+Tokens
+
+  plus = '+';
+  minus = '-';
+  l_sq_par = '[';
+  r_sq_par = ']';
+  l_brace = '{';
+  r_brace = '}';
+  arrow = '->';
+  equal = '=';
+  dot_dot = ':';
+
+  var = 'var';
+  exit = 'exit';
+  event = 'event';
+  visibility = 'visible' | 'invisible';
+  default = 'default';
+
+  num = digit+;
+  ident = letter (letter | digit)*;
+  comment = '#' not_eol* (13 | 10 | 13 10)?;
+  blank = (' ' | 9 | 13 | 10)+;
+
+IgnoredTokens
+  blank, comment;
+
+Productions
+
+  program = [variabledefs]:variabledef* [eventdefs]:eventdef*;
+
+  variabledef = var ident visibility [min]:num [max]:num [default]:num;
+  eventdef = event ident dot_dot exitlist;
+
+  exitlist = l_brace exitstm* r_brace;
+  
+  exitstm = exit num arrow ident [modifierlist]:modifierlist?;
+
+  modifierlist = l_sq_par [modifiers]:modifier* r_sq_par;
+
+  modifier = 
+    {plus} ident plus num |
+    {minus} ident minus num |
+    {equal} ident equal num;
+

@@ -1,0 +1,15 @@
+var hp invisible 0 10 20
+var mp visible 0 1 100
+
+event start : {
+    exit 1 -> start
+    exit 2 -> start [hp + 1
+                     mp - 1]
+    exit 3 -> stoptalking
+}
+
+event stoptalking : {
+    exit 1 -> start
+    exit 2 -> stoptalking
+    exit 3 -> adoption
+}

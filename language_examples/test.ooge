@@ -1,0 +1,24 @@
+# comment
+first choice start : {
+    background : "This is a ascii background."
+    character : ":*)"
+    text : "A clown is standing before you."
+    exit 1 : "Talking about the plants."
+    exit 2 : "Talking about the dogs."
+    exit 3 : "Not talking."
+}
+
+choice stoptalking : {
+    background : "This is a ascii background."
+    character : "8*s"
+    text : "The clown looks confused."
+    exit 1 : "Look confused too."
+    exit 2 : "Look happy."
+    exit 3 : "Become a dog."
+}
+
+end adoption : {
+    background : "This is a ascii background."
+    character : "8*D"
+    text : "The clown just adopted you."
+}
