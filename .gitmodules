@@ -1,0 +1,3 @@
+[submodule "sablecc"]
+	path = sablecc
+	url = https://github.com/SableCC/sablecc.git
